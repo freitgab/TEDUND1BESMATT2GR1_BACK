@@ -18,7 +18,10 @@ C4Context
     Rel(admin, sistema_clima, "Gerencia OGM, DMC, Redes, Técnicos e Logs", "Acesso Web")
     Rel(colab, sistema_clima, "Cadastra/Inativa estações, julga solicitações de uso e instalação", "Acesso Web")
     Rel(usuario, sistema_clima, "Submete pedidos individuais de estações e libera as estações pós-uso", "Acesso Web")
+```
 
+### Nível 2: Diagrama de Contêineres
+```mermaid
 C4Container
     title Diagrama de Contêineres - Sistema de Controle e Monitoramento do Clima
 
@@ -43,7 +46,10 @@ C4Container
     UpdateRelStyle(atores, frontend, $offsetX="-30")
     UpdateRelStyle(frontend, backend, $offsetX="-30")
     UpdateRelStyle(backend, database, $offsetX="-30")
+```
 
+### Nível 3: Diagrama de Componentes (Back-End)
+```mermaid
 C4Component
     title Diagrama de Componentes (Nível 3) - Back-End Application
 
@@ -82,3 +88,4 @@ C4Component
     Rel(relatorio_service, repositorios, "Consulta dados consolidados")
 
     Rel(repositorios, database, "Executa queries e procedimentos", "JDBC/SQL")
+```
