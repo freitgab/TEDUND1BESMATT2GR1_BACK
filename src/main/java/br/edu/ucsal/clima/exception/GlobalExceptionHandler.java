@@ -24,9 +24,14 @@ public class GlobalExceptionHandler {
         return resposta(HttpStatus.BAD_REQUEST, "Dados invalidos", campos);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiError> entradaInvalida(Exception ex) {
-        return resposta(HttpStatus.BAD_REQUEST, "Requisicao invalida", Map.of());
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> entradaInvalida(IllegalArgumentException ex) {
+        return resposta(HttpStatus.BAD_REQUEST, ex.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> corpoInvalido(HttpMessageNotReadableException ex) {
+        return resposta(HttpStatus.BAD_REQUEST, "Corpo da requisicao invalido", Map.of());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -39,9 +44,14 @@ public class GlobalExceptionHandler {
         return resposta(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, IllegalStateException.class})
-    public ResponseEntity<ApiError> conflito(Exception ex) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> integridade(DataIntegrityViolationException ex) {
         return resposta(HttpStatus.CONFLICT, "Operacao viola uma regra de integridade", Map.of());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiError> conflito(IllegalStateException ex) {
+        return resposta(HttpStatus.CONFLICT, ex.getMessage(), Map.of());
     }
 
     @ExceptionHandler(Exception.class)

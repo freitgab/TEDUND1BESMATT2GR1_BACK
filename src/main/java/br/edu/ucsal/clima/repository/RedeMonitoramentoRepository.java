@@ -1,6 +1,11 @@
 package br.edu.ucsal.clima.repository;
 
 import br.edu.ucsal.clima.domain.entity.RedeMonitoramento;
+import br.edu.ucsal.clima.domain.enums.StatusEntidade;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RedeMonitoramentoRepository extends JpaRepository<RedeMonitoramento, Long> { }
+public interface RedeMonitoramentoRepository extends JpaRepository<RedeMonitoramento, Long> {
+    boolean existsBySiglaIgnoreCase(String sigla);
+    boolean existsBySiglaIgnoreCaseAndIdNot(String sigla, Long id);
+    boolean existsByDistrito_IdAndStatus(Long distritoId, StatusEntidade status);
+}

@@ -32,7 +32,7 @@ public class OrgaoGestorMeteorologia {
     @JoinColumn(name = "diretor_geral_id")
     private Usuario diretorGeral;
 
-    @OneToMany(mappedBy = "orgaoGestor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orgaoGestor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SetorCoordenadoria> setores = new HashSet<>();
 
     @Column(nullable = false, updatable = false)

@@ -47,19 +47,27 @@ public class TecnicoMeteorologista {
 
     @PrePersist
     void inicializar() {
-        validarPerfilColaborador();
         if (dataCadastro == null) dataCadastro = LocalDate.now();
         if (status == null) status = StatusEntidade.ATIVO;
+        validarPerfilColaborador();
     }
 
     @PreUpdate
     void validarPerfilColaborador() {
-        if (usuario == null || usuario.getPerfis().stream()
-                .noneMatch(perfil -> perfil.getNome() == NomePerfil.COLABORADOR)) {
+        if (status == StatusEntidade.ATIVO && (usuario == null || usuario.getPerfis().stream()
+                .noneMatch(perfil -> perfil.getNome() == NomePerfil.COLABORADOR))) {
             throw new IllegalStateException("O tecnico deve estar vinculado a um usuario com perfil COLABORADOR");
         }
     }
 
     @PreRemove
     void impedirExclusaoFisica() { throw new IllegalStateException("Inative o tecnico em vez de exclui-lo fisicamente"); }
+
+    public void inativarComJustificativa(String justificativa) {
+        if (justificativa == null || justificativa.isBlank()) {
+            throw new IllegalArgumentException("Justificativa de inativacao e obrigatoria");
+        }
+        this.status = StatusEntidade.INATIVO;
+        this.motivoInativacao = justificativa.trim();
+    }
 }
