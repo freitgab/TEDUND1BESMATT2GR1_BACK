@@ -31,4 +31,16 @@ public class AuditoriaService {
     public void registrar(String acao, String entidade, String detalhes) {
         registrar(acao, entidade, null, detalhes);
     }
+
+    @Transactional(readOnly = true)
+    public java.util.List<LogAuditoria> listarLogs(String acao, String entidadeAfetada, String usuarioEmail) {
+        return repository.findAllByOrderByDataHoraDesc().stream()
+                .filter(log -> acao == null || acao.isBlank()
+                        || (log.getAcao() != null && log.getAcao().toLowerCase().contains(acao.trim().toLowerCase())))
+                .filter(log -> entidadeAfetada == null || entidadeAfetada.isBlank()
+                        || (log.getEntidadeAfetada() != null && log.getEntidadeAfetada().toLowerCase().contains(entidadeAfetada.trim().toLowerCase())))
+                .filter(log -> usuarioEmail == null || usuarioEmail.isBlank()
+                        || (log.getUsuarioEmail() != null && log.getUsuarioEmail().toLowerCase().contains(usuarioEmail.trim().toLowerCase())))
+                .toList();
+    }
 }
