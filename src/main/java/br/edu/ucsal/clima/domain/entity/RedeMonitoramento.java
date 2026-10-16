@@ -26,7 +26,7 @@ public class RedeMonitoramento {
     @JoinColumn(name = "distrito_id", nullable = false)
     private DistritoMonitoramentoClimatico distrito;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "rede_tipos_monitoramento", joinColumns = @JoinColumn(name = "rede_id"))
     @Column(name = "tipo_monitoramento", nullable = false, length = 80)
     private Set<String> tiposMonitoramento = new HashSet<>();

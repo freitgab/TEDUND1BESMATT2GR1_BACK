@@ -29,7 +29,7 @@ public class SoftwareColetaTransmissao {
     @Column(nullable = false, length = 1000)
     private String objetivoUso;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "software_variaveis_monitoradas", joinColumns = @JoinColumn(name = "software_id"))
     @Column(name = "variavel", nullable = false, length = 80)
     private Set<String> variaveisMonitoradas = new HashSet<>();

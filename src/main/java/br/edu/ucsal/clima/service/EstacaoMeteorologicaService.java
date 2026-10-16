@@ -245,14 +245,19 @@ public class EstacaoMeteorologicaService {
                 .toList();
 
         List<SoftwareDTO> softwares = estacao.getSoftwares().stream()
-                .map(sw -> new SoftwareDTO(
-                        sw.getId(),
-                        sw.getNome(),
-                        sw.getUrlDownload(),
-                        sw.getTipoSoftware(),
-                        sw.getObjetivoUso(),
-                        sw.getVariaveisMonitoradas()
-                ))
+                .map(sw -> {
+                    java.util.Set<String> variaveis = (sw.getVariaveisMonitoradas() != null)
+                            ? new HashSet<>(sw.getVariaveisMonitoradas())
+                            : java.util.Collections.emptySet();
+                    return new SoftwareDTO(
+                            sw.getId(),
+                            sw.getNome(),
+                            sw.getUrlDownload(),
+                            sw.getTipoSoftware(),
+                            sw.getObjetivoUso(),
+                            variaveis
+                    );
+                })
                 .toList();
 
         return new EstacaoResponse(

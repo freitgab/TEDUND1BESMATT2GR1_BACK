@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RelatorioService {
 
@@ -37,9 +38,12 @@ public class RelatorioService {
 
         List<RelatorioOgmItemDTO> estrutura = ogms.stream().map(ogm -> {
             List<DmcResponse> distritosOgm = dmcs.stream()
-                    .filter(d -> ogm.id().equals(d.orgaoGestorId()))
+                    .filter(d -> ogm.id() != null && ogm.id().equals(d.orgaoGestorId()))
                     .toList();
-            Set<Long> dmcIds = distritosOgm.stream().map(DmcResponse::id).collect(Collectors.toSet());
+            Set<Long> dmcIds = distritosOgm.stream()
+                    .map(DmcResponse::id)
+                    .filter(java.util.Objects::nonNull)
+                    .collect(Collectors.toSet());
             List<RedeResponse> redesOgm = redes.stream()
                     .filter(r -> r.distritoId() != null && dmcIds.contains(r.distritoId()))
                     .toList();
@@ -113,14 +117,17 @@ public class RelatorioService {
 
     private RelatorioEmissorDTO obterEmissorAtual(LocalDateTime agora) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getName()))
+        String principalName = (auth != null && auth.getName() != null && !auth.getName().isBlank()
+                && !"anonymousUser".equals(auth.getName()))
                 ? auth.getName()
                 : "sistema@clima.gov.br";
 
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email).orElse(null);
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(principalName).orElse(null);
         if (usuario != null) {
-            return new RelatorioEmissorDTO(usuario.getId(), usuario.getNomeCompleto(), usuario.getEmail(), agora);
+            String nome = usuario.getNomeCompleto() != null ? usuario.getNomeCompleto() : principalName;
+            String email = usuario.getEmail() != null ? usuario.getEmail() : principalName;
+            return new RelatorioEmissorDTO(usuario.getId(), nome, email, agora);
         }
-        return new RelatorioEmissorDTO(null, email, email, agora);
+        return new RelatorioEmissorDTO(null, principalName, principalName, agora);
     }
 }

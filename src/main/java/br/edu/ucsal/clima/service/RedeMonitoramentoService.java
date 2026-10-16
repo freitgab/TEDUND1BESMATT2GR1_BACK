@@ -143,6 +143,9 @@ public class RedeMonitoramentoService {
         String dmcNome = rede.getDistrito() != null ? rede.getDistrito().getNome() : null;
         Long respId = rede.getMeteorologistaResponsavel() != null ? rede.getMeteorologistaResponsavel().getId() : null;
         String respNome = rede.getMeteorologistaResponsavel() != null ? rede.getMeteorologistaResponsavel().getNomeCompleto() : null;
+        java.util.Set<String> tipos = (rede.getTiposMonitoramento() != null)
+                ? new HashSet<>(rede.getTiposMonitoramento())
+                : java.util.Collections.emptySet();
 
         return new RedeResponse(
                 rede.getId(),
@@ -150,7 +153,7 @@ public class RedeMonitoramentoService {
                 rede.getDescricao(),
                 dmcId,
                 dmcNome,
-                rede.getTiposMonitoramento(),
+                tipos,
                 respId,
                 respNome,
                 rede.getDataCadastro(),
