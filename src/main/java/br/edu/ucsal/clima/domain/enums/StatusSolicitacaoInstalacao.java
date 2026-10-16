@@ -1,3 +1,3 @@
 package br.edu.ucsal.clima.domain.enums;
 
-public enum StatusSolicitacaoInstalacao { PENDENTE, APROVADA, REPROVADA }
+public enum StatusSolicitacaoInstalacao { PENDENTE, APROVADA, REPROVADA, INATIVO }

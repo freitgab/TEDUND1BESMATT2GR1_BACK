@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "estacoes_meteorologicas")
@@ -48,10 +50,16 @@ public class EstacaoMeteorologica {
     @JoinColumn(name = "rede_id", nullable = false)
     private RedeMonitoramento rede;
 
+    @OneToMany(mappedBy = "estacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Sensor> sensores = new HashSet<>();
+
+    @OneToMany(mappedBy = "estacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SoftwareColetaTransmissao> softwares = new HashSet<>();
+
     @PrePersist
     void inicializar() {
         if (dataCadastro == null) dataCadastro = LocalDate.now();
-        status = StatusEstacao.DISPONIVEL;
+        if (status == null) status = StatusEstacao.DISPONIVEL;
     }
 
     @PreRemove
